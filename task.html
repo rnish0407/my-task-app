@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#21808d">
+    <!-- This links to your manifest file for the "Add to Home Screen" prompt -->
+   <link rel="manifest" href="/my-task-app/manifest.json">
+    <title>Task Assistant - Offline Ready</title>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            
+            /* --- NEW: Sky Blue Palette --- */
+            --color-blue-100: rgba(224, 242, 254, 1);
+            --color-blue-200: rgba(186, 230, 253, 1);
+            --color-blue-300: rgba(125, 211, 252, 1);
+            --color-blue-400: rgba(56, 189, 248, 1);
+            --color-blue-500: rgba(14, 165, 233, 1);
+            --color-blue-600: rgba(2, 132, 199, 1);
+            
+            --color-black-800: rgba(18, 18, 18, 1);
+            --color-black-900: rgba(10, 10, 10, 1);
+            --color-gray-700: rgba(40, 40, 40, 1);
+            --color-gray-800: rgba(28, 28, 28, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-green-400: rgba(52, 211, 153, 1); /* Added Green */
+            --color-green-500: rgba(16, 185, 129, 1); /* Added Green */
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-teal-300: rgba(77, 208, 225, 1);
+            --color-teal-500: rgba(0, 150, 136, 1);
+            
+            /* --- NEW: Sky Blue RGB --- */
+            --color-blue-rgb: 125, 211, 252;
+            --color-blue-500-rgb: 14, 165, 233;
+
+            --color-red-500-rgb: 192, 21, 47;
+            --color-orange-500-rgb: 168, 75, 47;
+            --color-teal-500-rgb: 0, 150, 136;
+            
+            /* Dark Mode (Default) - NOW BLUE */
+            --color-background: var(--color-black-900);
+            --color-surface: var(--color-black-800);
+            --color-text: var(--color-blue-200);
+            --color-text-secondary: var(--color-blue-400);
+            --color-primary: var(--color-blue-300);
+            --color-primary-hover: var(--color-blue-400);
+            --color-primary-active: var(--color-blue-500);
+            --color-secondary: rgba(var(--color-blue-500-rgb), 0.15);
+            --color-secondary-hover: rgba(var(--color-blue-500-rgb), 0.25);
+            --color-border: rgba(var(--color-blue-rgb), 0.3);
+            --color-btn-primary-text: var(--color-black-900);
+            --color-card-border: rgba(var(--color-blue-rgb), 0.2);
+            --color-error: var(--color-red-400);
+            --color-success: var(--color-teal-300);
+            --color-calendar-green: var(--color-green-500); /* Added */
+            --color-calendar-red: var(--color-red-500); /* Added */
+            
+            --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            
+            --space-4: 4px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Light Mode - NOW BLUE */
+        body[data-theme='light'] {
+            --color-background: var(--color-white);
+            --color-surface: rgba(243, 244, 246, 1);
+            --color-text: var(--color-black-800);
+            --color-text-secondary: var(--color-gray-700);
+            --color-primary: var(--color-blue-500);
+            --color-primary-hover: var(--color-blue-600);
+            --color-primary-active: var(--color-blue-600);
+            --color-secondary: rgba(var(--color-blue-500-rgb), 0.1);
+            --color-secondary-hover: rgba(var(--color-blue-500-rgb), 0.2);
+            --color-border: rgba(var(--color-blue-rgb), 0.4);
+            --color-btn-primary-text: var(--color-white);
+            --color-card-border: rgba(var(--color-blue-rgb), 0.3);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --color-calendar-green: var(--color-green-400); /* Added */
+            --color-calendar-red: var(--color-red-400); /* Added */
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            body:not([data-theme='light']) {
+                /* Apply dark mode variables - NOW BLUE */
+                --color-background: var(--color-black-900);
+                --color-surface: var(--color-black-800);
+                --color-text: var(--color-blue-200);
+                --color-text-secondary: var(--color-blue-400);
+                --color-primary: var(--color-blue-300);
+                --color-primary-hover: var(--color-blue-400);
+                --color-primary-active: var(--color-blue-500);
+                --color-secondary: rgba(var(--color-blue-500-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-blue-500-rgb), 0.25);
+                --color-border: rgba(var(--color-blue-rgb), 0.3);
+                --color-btn-primary-text: var(--color-black-900);
+                --color-card-border: rgba(var(--color-blue-rgb), 0.2);
+                --color-error: var(--color-red-400);
+                --color-success: var(--color-teal-300);
+                --color-calendar-green: var(--color-green-500); /* Added */
+                --color-calendar-red: var(--color-red-500); /* Added */
+            }
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+            padding: var(--space-16);
+            transition: background-color 0.3s, color 0.3s;
+            padding-bottom: 120px; /* Ensure space for nav bar */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            /* padding-bottom: 200px; */ /* Removed, handled by body padding */
+        }
+        
+        header {
+            margin-bottom: var(--space-32);
+        }
+        
+        h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: 600;
+            margin-bottom: var(--space-8);
+        }
+        
+        .subtitle {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-base);
+        }
+        
+        .input-section {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            margin-bottom: var(--space-24);
+            box-shadow: var(--shadow-sm), 0 0 20px rgba(var(--color-blue-500-rgb), 0.15); /* Shadow color updated */
+        }
+        
+        .voice-input-group {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-16);
+        }
+        
+        .form-control {
+            width: 100%; /* Ensure it fills container */
+            padding: var(--space-12);
+            font-size: var(--font-size-base);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            background: var(--color-background);
+            color: var(--color-text);
+            -webkit-appearance: none; /* Fix for iOS styling */
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        input[type="datetime-local"] {
+            color-scheme: var(--color-background) == var(--color-black-900) ? dark : light;
+        }
+        
+        .btn {
+            padding: var(--space-12) var(--space-20);
+            font-size: var(--font-size-base);
+            font-weight: 500;
+            border: none;
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent; /* Remove tap flash on mobile */
+        }
+        
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+        }
+        
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn-primary:disabled {
+            background: var(--color-border);
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--color-secondary-hover);
+        }
+        
+        .assistant-avatar {
+            position: fixed;
+            bottom: 100px; /* Raised to be above the new nav bar */
+            right: var(--space-24);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-active)); /* Use theme variables */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 4px 30px rgba(125, 211, 252, 0.7), 0 0 15px rgba(14, 165, 233, 0.5); /* Shadow color updated */
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+            z-index: 1000;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .assistant-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .assistant-avatar.speaking {
+            animation: speaking 0.8s ease-in-out infinite;
+        }
+        
+        .assistant-avatar.listening {
+            background: linear-gradient(135deg, var(--color-red-400), var(--color-red-500));
+            box-shadow: 0 4px 30px rgba(255, 84, 89, 0.7), 0 0 15px rgba(192, 21, 47, 0.5);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .assistant-avatar:disabled {
+            background: var(--color-gray-800);
+            cursor: not-allowed;
+            animation: none;
+            transform: scale(1);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        @keyframes speaking {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+        
+        .offline-indicator {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-orange-500);
+            color: white;
+            padding: var(--space-8) var(--space-16);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-sm);
+            z-index: 2000;
+            display: none;
+        }
+        
+        .offline-indicator.show {
+            display: block;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-12);
+            margin-bottom: var(--space-16);
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-16);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            margin-bottom: var(--space-8);
+            color: var(--color-text-secondary);
+        }
+        
+        select.form-control {
+            cursor: pointer;
+            background: var(--color-background) url('data:image/svg+xml;utf8,<svg fill="%23' + getComputedStyle(document.documentElement).getPropertyValue('--color-text').substring(1) + '" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center;
+            background-size: 18px;
+        }
+        
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-8);
+            min-height: 60px;
+        }
+        
+        .task-item {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            padding: var(--space-12);
+            display: flex;
+            align-items: start;
+            gap: var(--space-12);
+            transition: all 0.2s;
+        }
+        
+        .task-item:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-primary);
+        }
+        
+        .task-checkbox {
+            margin-top: 3px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--color-primary);
+        }
+        
+        .task-content {
+            flex: 1;
+            overflow: hidden; /* Prevent long text from breaking layout */
+        }
+        
+        .task-title {
+            font-size: var(--font-size-base);
+            margin-bottom: var(--space-4);
+            word-wrap: break-word;
+        }
+        
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+        
+        .task-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-12);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: var(--space-8);
+        }
+        
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--color-border);
+            background: var(--color-background);
+            color: var(--color-text);
+        }
+        
+        .btn-icon:hover {
+            background: var(--color-secondary);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--space-24);
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        .status-message {
+            padding: var(--space-12);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--space-16);
+            display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .status-message.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .status-message.success {
+            background: rgba(var(--color-teal-500-rgb), 0.15);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+        
+        .status-message.error {
+            background: rgba(var(--color-red-500-rgb), 0.15);
+            color: var(--color-error);
+            border: 1px solid var(--color-error);
+        }
+        
+        .filter-section {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-24);
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: var(--space-8) var(--space-16);
+            font-size: var(--font-size-sm);
+            border: 1px solid var(--color-border);
+            background: var(--color-background);
+            color: var(--color-text);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn.active {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border-color: var(--color-primary);
+        }
+        
+        .reason-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .reason-modal.show {
+            display: flex;
+        }
+        
+        .reason-modal-content {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .reason-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-16);
+        }
+        
+        .reason-modal-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+        }
+        
+        .reason-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--color-text-secondary);
+        }
+        
+        .reason-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: var(--space-12);
+            font-size: var(--font-size-base);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            background: var(--color-background);
+            color: var(--color-text);
+            resize: vertical;
+            font-family: var(--font-family-base);
+        }
+        
+        .reason-char-count {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-top: var(--space-8);
+            text-align: right;
+        }
+        
+        .reason-badge {
+            display: inline-block;
+            background: rgba(var(--color-teal-500-rgb), 0.15);
+            color: var(--color-success);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: var(--font-size-sm);
+            margin-left: var(--space-8);
+            cursor: pointer;
+        }
+        
+        .dashboard-section {
+            margin-bottom: var(--space-32);
+        }
+        
+        .dashboard-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-20);
+            box-shadow: var(--shadow-sm), 0 0 20px rgba(var(--color-blue-500-rgb), 0.15); /* Shadow color updated */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .dashboard-tabs {
+            display: flex;
+            gap: var(--space-4);
+            margin-bottom: var(--space-20);
+            background: var(--color-secondary);
+            border-radius: var(--radius-base);
+            padding: var(--space-4);
+        }
+        
+        .dashboard-tab {
+            flex: 1;
+            padding: var(--space-8) var(--space-16);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            border: none;
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            background: transparent;
+            color: var(--color-text-secondary);
+            transition: all 0.2s;
+        }
+        
+        .dashboard-tab.active {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .dashboard-tab:hover:not(.active) {
+            background: var(--color-secondary-hover);
+        }
+        
+        .dashboard-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .dashboard-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-16);
+            text-align: center;
+        }
+        
+        .dashboard-stats {
+            width: 100%;
+            margin-top: var(--space-16);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-8);
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-8);
+            background: var(--color-background);
+            border-radius: var(--radius-base);
+        }
+        
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        .stat-value {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        /* --- NEW NAVIGATION BAR STYLES --- */
+        #bottomNav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start; /* Align to top for padding */
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: var(--space-8) 0;
+            z-index: 999;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #bottomNav button {
+            background: transparent;
+            border: none;
+            color: var(--color-text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-4);
+            font-size: var(--font-size-sm);
+            padding: var(--space-4) var(--space-12);
+            border-radius: var(--radius-base);
+            transition: color 0.2s;
+            flex: 1; /* Make buttons share space */
+        }
+        
+        #bottomNav button span:first-child {
+            font-size: var(--font-size-2xl);
+            line-height: 1;
+        }
+
+        #bottomNav button.active {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+        /* --- END NEW NAVIGATION BAR STYLES --- */
+
+        /* --- NEW CALENDAR STYLES --- */
+        .monthly-view-section {
+            /* This class is now inside the modal, no margin needed */
+            margin-bottom: 0;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-8);
+            margin-top: var(--space-16);
+        }
+        .calendar-day {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1;
+            background: var(--color-background);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+        .calendar-day.header {
+            font-weight: 700;
+            color: var(--color-text-secondary);
+            background: transparent;
+        }
+        .calendar-day.empty {
+            background: transparent;
+        }
+        .calendar-day.green {
+            background: var(--color-calendar-green);
+            color: var(--color-black-900);
+        }
+        .calendar-day.red {
+            background: var(--color-calendar-red);
+            color: var(--color-white);
+        }
+        .calendar-day.today {
+            border: 2px solid var(--color-primary);
+            padding: 2px; /* Adjust padding to account for border */
+        }
+        /* --- END NEW CALENDAR STYLES --- */
+
+        /* --- NEW REPEAT TASK STYLES --- */
+        .form-group-checkbox {
+            display: flex;
+            align-items: center;
+            gap: var(--space-12);
+            margin-bottom: var(--space-16);
+        }
+        .form-group-checkbox label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        .repeat-days-group {
+            display: flex;
+            justify-content: space-between;
+            gap: var(--space-8);
+            margin-bottom: var(--space-16);
+        }
+        .day-toggle {
+            flex: 1;
+            aspect-ratio: 1;
+            border: 1px solid var(--color-border);
+            border-radius: 50%;
+            background: var(--color-background);
+            color: var(--color-text);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .day-toggle.active {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border-color: var(--color-primary);
+        }
+        /* --- END REPEAT TASK STYLES --- */
+
+        /* --- NEW SLIDER STYLES --- */
+        .form-group-slider {
+            margin-bottom: var(--space-16);
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: var(--space-16);
+        }
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: var(--color-border);
+            border-radius: 4px;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+        .slider:hover {
+            opacity: 1;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .slider-value {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--color-primary);
+            min-width: 40px; /* Prevent layout shift */
+            text-align: right;
+        }
+        /* --- END NEW SLIDER STYLES --- */
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .voice-input-group {
+                flex-direction: column;
+            }
+
+            .calendar-day {
+                font-size: 10px; /* Smaller font on mobile */
+            }
+
+            .day-toggle {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark"> <!-- Default to dark, settings will override -->
+    <div class="offline-indicator" id="offlineIndicator">
+        📴 Offline Mode - Voice features unavailable
+    </div>
+
+    <div class="container" id="homePage">
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div style="flex: 1;"></div>
+                <div style="flex: 1; display: flex; justify-content: center;">
+                    <h1 style="text-align: center;">ॐ नमः शिवाय</h1>
+                </div>
+                <!-- REMOVED Old Settings Button -->
+                <div style="flex: 1; display: flex; justify-content: flex-end;">
+                </div>
+            </div>
+        </header>
+        
+        <div class="dashboard-section">
+            <div class="dashboard-card" style="max-width: 650px; margin: 0 auto; padding: var(--space-16);">
+                <div style="display: flex; align-items: stretch; gap: var(--space-20); width: 100%; flex-wrap: wrap;">
+                    <div style="flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+                        <h3 class="dashboard-title" id="dashboardTitle" style="font-size: var(--font-size-base); margin-bottom: var(--space-8); white-space: nowrap;">Weekly Progress</h3>
+                        <canvas id="dashboardChart" width="110" height="110"></canvas>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: var(--space-12); min-width: 200px; justify-content: center;">
+                        <div class="dashboard-tabs">
+                            <button class="dashboard-tab active" data-period="weekly">📅 Weekly</button>
+                            <button class="dashboard-tab" data-period="monthly">🗓️ Monthly</button>
+                        </div>
+                        <div class="dashboard-stats" id="dashboardStats">
+                            <div class="stat-item">
+                                <span class="stat-label">Completed:</span>
+                                <span class="stat-value" id="statsCompleted">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Uncompleted:</span>
+                                <span class="stat-value" id="statsPending">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Rate:</span>
+                                <span class="stat-value" id="statsRate">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="assistant-avatar" id="assistantAvatar" title="Click for voice input">
+            <span id="avatarIcon">👩‍💼</span>
+        </div>
+
+        <div id="statusMessage" class="status-message"></div>
+
+        <div class="input-section">
+            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-16);">Add New Task</h2>
+            
+            <div class="form-group" style="margin-bottom: var(--space-16);">
+                <label class="form-label">Reminder Before Due Time</label>
+                <select id="reminderTimeSelect" class="form-control">
+                    <option value="0">At due time only</option>
+                    <option value="5" selected>5 minutes before</option>
+                    <option value="10">10 minutes before</option>
+                    <option value="15">15 minutes before</option>
+                    <option value="30">30 minutes before</option>
+                    <option value="60">1 hour before</option>
+                    <option value="120">2 hours before</option>
+                    <option value="1440">1 day before</option>
+                </select>
+            </div>
+            
+            <div class="voice-input-group">
+                <input type="text" id="taskInput" class="form-control" placeholder="Enter task description...">
+            </div>
+            
+            <div class="form-row">
+                <!-- REMOVED Priority Level Form Group -->
+                
+                <div class="form-group">
+                    <label class="form-label">Due Date & Time</label>
+                    <input type="datetime-local" id="dueDateInput" class="form-control">
+                </div>
+            </div>
+
+            <!-- NEW REPEAT SECTION -->
+            <div class="form-group-checkbox">
+                <input type="checkbox" id="repeatCheckbox" style="width: 18px; height: 18px; cursor: pointer;">
+                <label for="repeatCheckbox" class="form-label" style="margin-bottom: 0;">Repeat</label>
+            </div>
+
+            <div id="repeatDaysContainer" class="repeat-days-group" style="display: none;">
+                <button class="day-toggle" data-day="0">S</button>
+                <button class="day-toggle" data-day="1">M</button>
+                <button class="day-toggle" data-day="2">T</button>
+                <button class="day-toggle" data-day="3">W</button>
+                <button class="day-toggle" data-day="4">T</button>
+                <button class="day-toggle" data-day="5">F</button>
+                <button class="day-toggle" data-day="6">S</button>
+            </div>
+            <!-- END REPEAT SECTION -->
+            
+            <button id="addTaskBtn" class="btn btn-primary" style="width: 100%; margin-top: var(--space-16);">Add Task</button>
+        </div>
+
+        <div class="input-section" style="margin-bottom: var(--space-24);">
+            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-16);">📢 Upcoming Reminders</h2>
+            <div id="upcomingReminders" class="task-list" style="max-height: 200px; overflow-y: auto;">
+                <div class="empty-state">No upcoming reminders</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="settingsPage" style="display: none;">
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <h1>⚙️ Settings</h1>
+                    <p class="subtitle">Customize your experience</p>
+                </div>
+                <!-- This button now closes settings and goes HOME -->
+                <button id="closeSettingsBtn" style="background: transparent; border: 2px solid var(--color-border); border-radius: 50%; width: 48px; height: 48px; font-size: 20px; cursor: pointer; color: var(--color-text); transition: all 0.3s ease;" title="Close">✕</button>
+            </div>
+        </header>
+        
+        <div class="input-section">
+            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-16);">🎨 Appearance</h2>
+            
+            <div class="form-group">
+                <label class="form-label">Theme</label>
+                <select id="themeSelect" class="form-control">
+                    <option value="system">System Default</option>
+                    <option value="light">Light Mode</option>
+                    <option value="dark">Dark Mode</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="input-section">
+            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-16);">🤖 Assistant</h2>
+            
+            <!-- Changed this field -->
+            <div class="form-group">
+                <label class="form-label">Your Name</label>
+                <input type="text" id="userNameSettings" class="form-control" placeholder="Enter your name..." value="User">
+            </div>
+        </div>
+
+        <!-- NEW PRODUCTIVITY TARGET SECTION -->
+        <div class="input-section">
+            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-16);">🎯 Productivity</h2>
+            <div class="form-group-slider">
+                <label class="form-label" for="productivityTargetSlider">Productivity Target</label>
+                <div class="slider-container">
+                    <input type="range" min="10" max="100" value="75" class="slider" id="productivityTargetSlider">
+                    <span id="productivityTargetValue" class="slider-value">75%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-section">
+            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-16);">📱 App Info</h2>
+            
+            <div style="display: flex; flex-direction: column; gap: var(--space-12);">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-8); background: var(--color-background); border-radius: var(--radius-base);">
+                    <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Version:</span>
+                    <span style="font-size: var(--font-size-base); font-weight: 600;">1.0.0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-8); background: var(--color-background); border-radius: var(--radius-base);">
+                    <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Status:</span>
+                    <span style="font-size: var(--font-size-base); font-weight: 600; color: var(--color-success);">Data Saved Locally 💾</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW "TODAY" PAGE -->
+    <div class="container" id="todayPage" style="display: none;">
+        <header>
+            <!-- UPDATED HEADER -->
+            <div style="display: flex; justify-content: space-between; align-items: center;"> 
+                <div>
+                    <h1>☀️ Today's Tasks</h1>
+                    <p class="subtitle">Your immediate priorities</p>
+                </div>
+                <!-- NEW BUTTON -->
+                <button id="addTaskTodayBtn" class="btn btn-primary" style="font-size: var(--font-size-sm); padding: var(--space-8) var(--space-12);">+ Add Task</button>
+            </div>
+        </header>
+
+        <div class="input-section">
+            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-16);">Tasks Due Today</h2>
+            <div id="todayTaskList" class="task-list">
+                <div class="empty-state">No tasks due today</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="secondPage" style="display: none;">
+        
+        <!-- NEW BUTTON FOR CALENDAR -->
+        <div class="input-section" style="margin-bottom: var(--space-24);">
+            <button id="showCalendarModalBtn" class="btn btn-primary" style="width: 100%;">View Monthly Productivity Calendar</button>
+        </div>
+
+        <div class="filter-section">
+            <button class="filter-btn active" data-filter="all">All Tasks</button>
+            <button class="filter-btn" data-filter="today">Today</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+            <button class="filter-btn" data-filter="uncompleted">Uncompleted</button>
+        </div>
+
+        <!-- REMOVED Priority Grid -->
+
+        <div class="input-section" style="margin-top: var(--space-24);">
+            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-16);">✅ Completed Tasks</h2>
+            <div id="completedTasksList" class="task-list">
+                <div class="empty-state">No completed tasks yet</div>
+            </div>
+        </div>
+
+        <div class="input-section" style="margin-top: var(--space-24);">
+            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-16);">⚠️ Uncompleted Tasks</h2>
+            <div id="uncompletedTasksList" class="task-list">
+                <div class="empty-state">No uncompleted tasks</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UPDATED NAVIGATION BAR HTML -->
+    <div id="bottomNav">
+        <button id="homeNavBtn" class="btn btn-secondary active" title="Home">
+            <span>🏠</span>
+            <span>Home</span>
+        </button>
+        <button id="page2NavBtn" class="btn btn-secondary" title="Stats">
+            <span>📈</span> <!-- <--- ICON CHANGED HERE -->
+            <span>Stats</span>
+        </button>
+        <!-- NEW "TODAY" BUTTON -->
+        <button id="todayNavBtn" class="btn btn-secondary" title="Today">
+            <span>☀️</span>
+            <span>Today</span>
+        </button>
+        <button id="settingsNavBtn" class="btn btn-secondary" title="Settings">
+            <span>⚙️</span>
+            <span>Settings</span>
+        </button>
+    </div>
+
+    <div id="reasonModal" class="reason-modal">
+        <div class="reason-modal-content">
+            <div class="reason-modal-header">
+                <h3 class="reason-modal-title">Add/Edit Reason</h3>
+                <button class="reason-close" onclick="closeReasonModal()">×</button>
+            </div>
+            <textarea id="reasonTextarea" class="reason-textarea" placeholder="Explain why this task was completed or not completed (max 300 words)..." maxlength="2100"></textarea>
+            <div class="reason-char-count">
+                <span id="reasonCharCount">0</span> / 2100 characters (≈300 words)
+            </div>
+            <div style="display: flex; gap: var(--space-12); margin-top: var(--space-16);">
+                <button class="btn btn-primary" onclick="saveReason()" style="flex: 1;">Save Reason</button>
+                <button class="btn btn-secondary" onclick="closeReasonModal()" style="flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW CALENDAR MODAL -->
+    <div id="calendarModal" class="reason-modal"> <!-- Re-using 'reason-modal' styles -->
+        <div class="reason-modal-content" style="max-width: 600px;"> <!-- Wider content -->
+            <div class="reason-modal-header">
+                <h3 class="reason-modal-title">Monthly Productivity</h3>
+                <button id="calendarCloseBtn" class="reason-close">×</button> <!-- New close button ID -->
+            </div>
+            
+            <!-- This is the original 'monthly-view-section' content -->
+            <div class="monthly-view-section"> 
+                <div class="form-row">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">Month</label>
+                        <select id="monthSelect" class="form-control"></select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">Year</label>
+                        <select id="yearSelect" class="form-control"></select>
+                    </div>
+                </div>
+                <div id="monthlyCalendar" class="calendar-grid"></div>
+            </div>
+            <!-- End of original content -->
+
+        </div>
+    </div>
+
+    <script>
+        // --- State Variables ---
+        let tasks = [];
+        let currentReasonTaskId = null;
+        let currentFilter = 'all';
+        let recognition = null;
+        let isListening = false;
+        let speechSynthesis = window.speechSynthesis;
+        let assistantVoice = null;
+        let isOnline = navigator.onLine;
+        let reminderTimeouts = {};
+        let currentPage = 'home';
+        let touchStartX = 0;
+        let chartInstance = null;
+        let userName = "User"; // Changed from assistantName
+        let productivityTarget = 75; // NEW: Default productivity target
+        
+        // --- NEW: Conversation State ---
+        let conversationState = 'idle'; // idle, prompting_task, listening_task, prompting_date, listening_date, prompting_time, listening_time, prompting_reminder, listening_reminder, saving
+        let newTaskData = {};
+
+        // --- DOM Elements ---
+        const dom = {
+            homePage: document.getElementById('homePage'),
+            settingsPage: document.getElementById('settingsPage'),
+            secondPage: document.getElementById('secondPage'),
+            todayPage: document.getElementById('todayPage'), // ADDED
+            assistantAvatar: document.getElementById('assistantAvatar'),
+            taskInput: document.getElementById('taskInput'),
+            dueDateInput: document.getElementById('dueDateInput'),
+            // REMOVED prioritySelect
+            reminderTimeSelect: document.getElementById('reminderTimeSelect'),
+            addTaskBtn: document.getElementById('addTaskBtn'),
+            // REMOVED urgentList, scheduleList
+            completedTasksList: document.getElementById('completedTasksList'),
+            uncompletedTasksList: document.getElementById('uncompletedTasksList'),
+            todayTaskList: document.getElementById('todayTaskList'), // ADDED
+            addTaskTodayBtn: document.getElementById('addTaskTodayBtn'), // NEW
+            // settingsBtn: document.getElementById('settingsBtn'), // REMOVED
+            closeSettingsBtn: document.getElementById('closeSettingsBtn'),
+            homeNavBtn: document.getElementById('homeNavBtn'),
+            page2NavBtn: document.getElementById('page2NavBtn'),
+            todayNavBtn: document.getElementById('todayNavBtn'), // ADDED
+            settingsNavBtn: document.getElementById('settingsNavBtn'),
+            reasonModal: document.getElementById('reasonModal'),
+            reasonTextarea: document.getElementById('reasonTextarea'),
+            reasonCharCount: document.getElementById('reasonCharCount'),
+            themeSelect: document.getElementById('themeSelect'),
+            userNameSettings: document.getElementById('userNameSettings'), // Changed from assistantNameSettings
+            offlineIndicator: document.getElementById('offlineIndicator'),
+            dashboardChart: document.getElementById('dashboardChart'),
+            dashboardTabs: document.querySelector('.dashboard-tabs'),
+            dashboardTitle: document.getElementById('dashboardTitle'),
+            statsCompleted: document.getElementById('statsCompleted'),
+            statsPending: document.getElementById('statsPending'),
+            statsRate: document.getElementById('statsRate'),
+            upcomingReminders: document.getElementById('upcomingReminders'),
+            statusMessage: document.getElementById('statusMessage'),
+            filterSection: document.querySelector('.filter-section'),
+            bottomNav: document.getElementById('bottomNav'),
+            // --- NEW CALENDAR DOM ---
+            monthSelect: document.getElementById('monthSelect'),
+            yearSelect: document.getElementById('yearSelect'),
+            monthlyCalendar: document.getElementById('monthlyCalendar'),
+            showCalendarModalBtn: document.getElementById('showCalendarModalBtn'), // NEW
+            calendarModal: document.getElementById('calendarModal'), // NEW
+            calendarCloseBtn: document.getElementById('calendarCloseBtn'), // NEW
+            // --- NEW REPEAT DOM ---
+            repeatCheckbox: document.getElementById('repeatCheckbox'),
+            repeatDaysContainer: document.getElementById('repeatDaysContainer'),
+            dayToggles: document.querySelectorAll('.day-toggle'),
+            // --- NEW SLIDER DOM ---
+            productivityTargetSlider: document.getElementById('productivityTargetSlider'),
+            productivityTargetValue: document.getElementById('productivityTargetValue')
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTasks();
+            loadSettings();
+            renderTasks();
+            updateDashboard('weekly');
+            loadAllReminders();
+            initSpeech();
+            loadVoices();
+            updateOnlineStatus();
+            addEventListeners();
+            requestNotificationPermission();
+            populateDateSelectors(); // NEW
+            // renderMonthlyCalendar(); // Removed, will render on modal open
+            navigateTo('home'); // Ensure home is default
+            // registerServiceWorker(); // <-- COMMENTED OUT TO FIX PREVIEW ERROR
+        });
+
+        // --- NEW: Service Worker Registration Function ---
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/my-task-app/sw.js') // <-- EDITED: No leading slash, as per hosting guide
+                        .then(registration => {
+                            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                        })
+                        .catch(err => {
+                            console.error('ServiceWorker registration failed: ', err);
+                        });
+                });
+            }
+        }
+
+        function addEventListeners() {
+            dom.addTaskBtn.addEventListener('click', handleAddTask);
+            // dom.settingsBtn.addEventListener('click', () => navigateTo('settings')); // REMOVED
+            dom.closeSettingsBtn.addEventListener('click', () => navigateTo('home')); // MODIFIED: Close button now goes home
+            dom.homeNavBtn.addEventListener('click', () => navigateTo('home'));
+            dom.page2NavBtn.addEventListener('click', () => navigateTo('secondPage'));
+            dom.todayNavBtn.addEventListener('click', () => navigateTo('today')); // ADDED
+            dom.settingsNavBtn.addEventListener('click', () => navigateTo('settings'));
+            dom.addTaskTodayBtn.addEventListener('click', handleAddTaskToday); // NEW
+            
+            dom.reasonTextarea.addEventListener('input', updateReasonCharCount);
+            
+            dom.themeSelect.addEventListener('change', handleThemeChange);
+            dom.userNameSettings.addEventListener('input', handleUserNameChange); // Changed
+            
+            dom.dashboardTabs.addEventListener('click', handleDashboardTabClick);
+            dom.filterSection.addEventListener('click', handleFilterClick);
+            
+            dom.assistantAvatar.addEventListener('click', toggleListening); // This now starts the convo
+            
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            
+            // Swipe navigation
+            document.body.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+            document.body.addEventListener('touchend', (e) => {
+                const touchEndX = e.changedTouches[0].screenX;
+                handleSwipe(touchEndX - touchStartX);
+            });
+
+            // Stop speaking if user clicks
+            document.body.addEventListener('click', () => {
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+            }, true);
+            
+            // --- NEW CALENDAR LISTENERS ---
+            dom.monthSelect.addEventListener('change', renderMonthlyCalendar);
+            dom.yearSelect.addEventListener('change', renderMonthlyCalendar);
+            dom.showCalendarModalBtn.addEventListener('click', openCalendarModal); // NEW
+            dom.calendarCloseBtn.addEventListener('click', closeCalendarModal); // NEW
+
+            // --- NEW REPEAT LISTENERS ---
+            dom.repeatCheckbox.addEventListener('change', (e) => {
+                dom.repeatDaysContainer.style.display = e.target.checked ? 'flex' : 'none';
+            });
+            dom.dayToggles.forEach(button => {
+                button.addEventListener('click', () => {
+                    button.classList.toggle('active');
+                });
+            });
+
+            // --- NEW SLIDER LISTENERS ---
+            dom.productivityTargetSlider.addEventListener('input', handleProductivitySliderInput);
+            dom.productivityTargetSlider.addEventListener('change', handleProductivitySliderChange); // Save on change
+        }
+
+        // --- Page Navigation ---
+        function navigateTo(pageName) {
+            dom.homePage.style.display = 'none';
+            dom.settingsPage.style.display = 'none';
+            dom.secondPage.style.display = 'none';
+            dom.todayPage.style.display = 'none'; // ADDED
+
+            dom.homeNavBtn.classList.remove('active');
+            dom.page2NavBtn.classList.remove('active');
+            dom.todayNavBtn.classList.remove('active'); // ADDED
+            dom.settingsNavBtn.classList.remove('active');
+            
+            // Always show avatar and nav bar
+            dom.bottomNav.style.transform = 'translateY(0)'; // Changed from translateX
+            dom.assistantAvatar.style.display = 'flex';
+            
+            if (pageName === 'home') {
+                dom.homePage.style.display = 'block';
+                dom.homeNavBtn.classList.add('active');
+            } else if (pageName === 'secondPage') {
+                dom.secondPage.style.display = 'block';
+                dom.page2NavBtn.classList.add('active');
+                // renderMonthlyCalendar(); // Removed: will render on modal open
+            } else if (pageName === 'today') { // ADDED
+                dom.todayPage.style.display = 'block';
+                dom.todayNavBtn.classList.add('active');
+            } else if (pageName === 'settings') {
+                dom.settingsPage.style.display = 'block';
+                dom.settingsNavBtn.classList.add('active');
+            }
+            
+            currentPage = pageName; // Now tracks all pages
+            window.scrollTo(0, 0);
+        }
+
+        function handleSwipe(deltaX) {
+            if (Math.abs(deltaX) < 100) return; // Not a full swipe
+            
+            // Swipe Left
+            if (deltaX < -100) {
+                if (currentPage === 'home') navigateTo('secondPage');
+                else if (currentPage === 'secondPage') navigateTo('today'); // UPDATED
+                else if (currentPage === 'today') navigateTo('settings'); // UPDATED
+            } 
+            // Swipe Right
+            else if (deltaX > 100) { 
+                if (currentPage === 'settings') navigateTo('today'); // UPDATED
+                else if (currentPage === 'today') navigateTo('secondPage'); // UPDATED
+                else if (currentPage === 'secondPage') navigateTo('home');
+            }
+        }
+
+        // --- Settings ---
+        function loadSettings() {
+            const theme = localStorage.getItem('theme') || 'system';
+            dom.themeSelect.value = theme;
+            applyTheme(theme);
+            
+            userName = localStorage.getItem('userName') || 'User'; // Changed
+            dom.userNameSettings.value = userName; // Changed
+
+            // NEW: Load productivity target
+            productivityTarget = parseInt(localStorage.getItem('productivityTarget') || '75', 10);
+            dom.productivityTargetSlider.value = productivityTarget;
+            dom.productivityTargetValue.textContent = `${productivityTarget}%`;
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'system') {
+                document.body.removeAttribute('data-theme');
+            } else {
+                document.body.setAttribute('data-theme', theme);
+            }
+        }
+
+        function handleThemeChange(e) {
+            const theme = e.target.value;
+            applyTheme(theme);
+            localStorage.setItem('theme', theme);
+        }
+
+        function handleUserNameChange(e) { // Changed
+            userName = e.target.value;
+            localStorage.setItem('userName', userName);
+        }
+
+        // --- NEW SLIDER HANDLERS ---
+        function handleProductivitySliderInput(e) {
+            const value = e.target.value;
+            dom.productivityTargetValue.textContent = `${value}%`;
+        }
+
+        function handleProductivitySliderChange(e) {
+            productivityTarget = parseInt(e.target.value, 10);
+            localStorage.setItem('productivityTarget', productivityTarget);
+            // Re-render the calendar if it's visible
+            if (dom.calendarModal.classList.contains('show')) {
+                renderMonthlyCalendar();
+            }
+        }
+
+        // --- NEW FUNCTION ---
+        function handleAddTaskToday() {
+            const now = new Date();
+            
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            
+            // Format for datetime-local input
+            const localDateTimeString = `${year}-${month}-${day}T${hours}:${minutes}`;
+            
+            dom.dueDateInput.value = localDateTimeString;
+            navigateTo('home');
+            dom.taskInput.focus(); // Focus on the task input
+        }
+
+        // --- Task Management (UPDATED FOR REPEAT) ---
+        function handleAddTask() {
+            const title = dom.taskInput.value.trim();
+            const due = dom.dueDateInput.value;
+            const reminderMinutes = dom.reminderTimeSelect.value;
+            
+            if (!title) {
+                showStatus('Please enter a task description', 'error');
+                return;
+            }
+            
+            const repeatDays = [];
+            if (dom.repeatCheckbox.checked) {
+                dom.dayToggles.forEach(button => {
+                    if (button.classList.contains('active')) {
+                        repeatDays.push(parseInt(button.dataset.day, 10));
+                    }
+                });
+            }
+
+            const task = {
+                id: Date.now(),
+                title: title,
+                due: due || null,
+                reminderMinutes: parseInt(reminderMinutes, 10),
+                reason: "",
+                repeatDays: repeatDays, // NEW
+                // Conditional properties
+                ...(repeatDays.length > 0
+                    ? { completedDates: [] } // For repeating tasks
+                    : { completed: false, completedAt: null } // For one-time tasks
+                )
+            };
+            
+            tasks.push(task);
+            saveTasks();
+            renderTasks(); // This will also re-render the calendar
+            scheduleReminder(task);
+            
+            // Reset form
+            dom.taskInput.value = '';
+            dom.dueDateInput.value = '';
+            dom.repeatCheckbox.checked = false;
+            dom.repeatDaysContainer.style.display = 'none';
+            dom.dayToggles.forEach(button => button.classList.remove('active'));
+            
+            // Don't show status if coming from voice, as voice will speak its own confirmation
+            if (conversationState === 'idle') {
+                showStatus('Task added successfully!', 'success');
+            }
+        }
+
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        }
+
+        // --- MODIFIED RENDER FUNCTION (UPDATED FOR REPEAT) ---
+        function renderTasks() {
+            dom.completedTasksList.innerHTML = '';
+            dom.uncompletedTasksList.innerHTML = '';
+            dom.upcomingReminders.innerHTML = '';
+            dom.todayTaskList.innerHTML = ''; 
+
+            let completedCount = 0, uncompletedCount = 0, reminderCount = 0, todayCount = 0;
+            const now = new Date();
+            const todayDay = now.getDay();
+            const todayDateString = now.toISOString().split('T')[0]; // YYYY-MM-DD
+            
+            const filteredTasks = tasks.filter(task => {
+                // Filter logic only applies to one-time tasks on the Stats page
+                const isRepeating = task.repeatDays && task.repeatDays.length > 0;
+                if (isRepeating) return true; // Always process repeating tasks
+
+                if (currentFilter === 'all') return true;
+                if (currentFilter === 'completed') return task.completed;
+                if (currentFilter === 'uncompleted') return !task.completed;
+                if (currentFilter === 'today') {
+                    if (!task.due) return false;
+                    const dueDate = new Date(task.due);
+                    return dueDate.toDateString() === now.toDateString();
+                }
+                return true;
+            });
+
+            // Sort all tasks for consistent ordering
+            const allTasksSorted = [...filteredTasks].sort((a, b) => {
+                if (a.due && b.due) return new Date(a.due) - new Date(b.due);
+                if (a.due) return -1;
+                if (b.due) return 1;
+                return 0;
+            });
+
+            for (const task of allTasksSorted) { 
+                const isRepeating = task.repeatDays && task.repeatDays.length > 0;
+
+                // --- 1. Populate "Today's Task" List ---
+                let showOnToday = false;
+                let isCompletedToday = false;
+                
+                if (isRepeating) {
+                    if (task.repeatDays.includes(todayDay)) {
+                        showOnToday = true;
+                        isCompletedToday = task.completedDates && task.completedDates.includes(todayDateString);
+                    }
+                } else if (task.due) { // One-time task
+                    if (new Date(task.due).toDateString() === now.toDateString()) {
+                        showOnToday = true;
+                        isCompletedToday = task.completed;
+                    }
+                }
+                
+                if (showOnToday) {
+                    dom.todayTaskList.appendChild(createTaskElement(task, isCompletedToday));
+                    todayCount++;
+                }
+
+                // --- 2. Populate "Stats" Page Lists (One-time tasks only) ---
+                if (!isRepeating) {
+                    if (task.completed) {
+                        if (currentFilter === 'all' || currentFilter === 'completed') {
+                            dom.completedTasksList.appendChild(createTaskElement(task, true));
+                        }
+                        completedCount++; // Count all, regardless of filter
+                    } else {
+                        if (currentFilter === 'all' || currentFilter === 'uncompleted' || (currentFilter === 'today' && showOnToday)) {
+                            dom.uncompletedTasksList.appendChild(createTaskElement(task, false));
+                        }
+                        uncompletedCount++; // Count all, regardless of filter
+                    }
+                }
+                
+                // --- 3. Populate "Upcoming Reminders" (One-time tasks only) ---
+                if (!isRepeating && task.due && new Date(task.due) > now && !task.completed) {
+                    dom.upcomingReminders.appendChild(createTaskElement(task, false));
+                    reminderCount++;
+                }
+            }
+
+            // --- 4. Show empty states ---
+            if (dom.completedTasksList.children.length === 0) dom.completedTasksList.innerHTML = '<div class="empty-state">No completed tasks yet</div>';
+            if (dom.uncompletedTasksList.children.length === 0) dom.uncompletedTasksList.innerHTML = '<div class="empty-state">No uncompleted tasks</div>';
+            if (reminderCount === 0) dom.upcomingReminders.innerHTML = '<div class="empty-state">No upcoming reminders</div>';
+            if (todayCount === 0) dom.todayTaskList.innerHTML = '<div class="empty-state">No tasks due today</div>';
+            
+            updateDashboard(dom.dashboardTabs.querySelector('.active').dataset.period);
+            // Do not render calendar here; it's on-demand
+        }
+        // --- END MODIFIED RENDER FUNCTION ---
+
+        function getRepeatDaysString(daysArray) {
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            if (daysArray.length === 7) return 'Daily';
+            if (daysArray.length === 5 && daysArray.join('') === '12345') return 'Weekdays';
+            return daysArray.map(dayIndex => dayNames[dayIndex]).join(', ');
+        }
+
+        function getFormattedTime(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+
+        function createTaskElement(task, isCompleted) { // `isCompleted` is pre-calculated
+            const div = document.createElement('div');
+            div.className = `task-item ${isCompleted ? 'completed' : ''}`;
+            div.dataset.id = task.id;
+            
+            let metaHTML = '';
+            const isRepeating = task.repeatDays && task.repeatDays.length > 0;
+
+            if (isRepeating) {
+                const time = getFormattedTime(task.due);
+                metaHTML = `<span>Repeats ${getRepeatDaysString(task.repeatDays)} ${time ? `at ${time}` : ''}</span>`;
+            } else {
+                metaHTML = `<span>${task.due ? formatRelativeDate(new Date(task.due)) : 'No due date'}</span>`;
+            }
+            
+            const reasonBadge = task.reason ? `<span class="reason-badge" title="${task.reason}">Has Reason</span>` : '';
+            
+            div.innerHTML = `
+                <input type="checkbox" class="task-checkbox" ${isCompleted ? 'checked' : ''} onchange="toggleTaskComplete(${task.id}, this.checked)">
+                <div class="task-content">
+                    <div class="task-title">${task.title}</div>
+                    <div class="task-meta">
+                        ${metaHTML}
+                        ${reasonBadge}
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn btn-icon" onclick="openReasonModal(${task.id})" title="Add/Edit Reason">📝</button>
+                    <button class="btn btn-icon" onclick="deleteTask(${task.id})" title="Delete Task">🗑️</button>
+                </div>
+            `;
+            return div;
+        }
+
+        function formatRelativeDate(date) {
+            const now = new Date();
+            const diffTime = date.getTime() - now.getTime();
+            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+            const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            
+            if (date.toDateString() === now.toDateString()) {
+                return `Today at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+            }
+            if (diffDays === 1) {
+                return `Tomorrow at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+            }
+            if (diffDays === -1) {
+                return `Yesterday at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+            }
+            return date.toLocaleDateString([], options);
+        }
+
+        function toggleTaskComplete(taskId, isChecked) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            const isRepeating = task.repeatDays && task.repeatDays.length > 0;
+            
+            if (isRepeating) {
+                const todayDateString = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+                if (!task.completedDates) task.completedDates = [];
+
+                if (isChecked) {
+                    if (!task.completedDates.includes(todayDateString)) {
+                        task.completedDates.push(todayDateString);
+                    }
+                } else {
+                    task.completedDates = task.completedDates.filter(d => d !== todayDateString);
+                }
+            } else {
+                // One-time task
+                task.completed = isChecked;
+                task.completedAt = isChecked ? new Date().toISOString() : null;
+            }
+            
+            if (isChecked) {
+                openReasonModal(taskId); // Prompt for reason on completion
+                if (!isRepeating) clearReminder(taskId); // Only clear one-time reminders
+            } else {
+                scheduleReminder(task); // Re-schedule if unchecked
+            }
+            
+            saveTasks();
+            renderTasks();
+        }
+
+        function deleteTask(taskId) {
+            tasks = tasks.filter(t => t.id !== taskId);
+            clearReminder(taskId);
+            saveTasks();
+            renderTasks();
+            showStatus('Task deleted', 'success');
+        }
+
+        // --- Reason Modal ---
+        window.openReasonModal = (taskId) => {
+            currentReasonTaskId = taskId;
+            const task = tasks.find(t => t.id === taskId);
+            dom.reasonTextarea.value = task.reason || '';
+            updateReasonCharCount();
+            dom.reasonModal.classList.add('show');
+        };
+
+        window.closeReasonModal = () => {
+            dom.reasonModal.classList.remove('show');
+            currentReasonTaskId = null;
+        };
+
+        window.saveReason = () => {
+            if (currentReasonTaskId === null) return;
+            const task = tasks.find(t => t.id === currentReasonTaskId);
+            if (task) {
+                task.reason = dom.reasonTextarea.value.trim();
+                saveTasks();
+                renderTasks(); // To show reason badge
+            }
+            closeReasonModal();
+        };
+
+        function updateReasonCharCount() {
+            const count = dom.reasonTextarea.value.length;
+            dom.reasonCharCount.textContent = `${count}`;
+        }
+
+        // --- Dashboard & Stats (UPDATED FOR REPEAT) ---
+        function handleDashboardTabClick(e) {
+            const tab = e.target.closest('.dashboard-tab');
+            if (!tab) return;
+            
+            dom.dashboardTabs.querySelectorAll('.dashboard-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            const period = tab.dataset.period;
+            dom.dashboardTitle.textContent = period === 'weekly' ? 'Weekly Progress' : 'Monthly Progress';
+            updateDashboard(period);
+        }
+
+        function updateDashboard(period) {
+            const now = new Date();
+            let startDate, endDate;
+            
+            if (period === 'weekly') {
+                startDate = new Date(now.setDate(now.getDate() - now.getDay())); // Start of week (Sunday)
+                endDate = new Date(now.setDate(now.getDate() + 6)); // End of week (Saturday)
+            } else { // monthly
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            }
+            
+            startDate.setHours(0, 0, 0, 0);
+            endDate.setHours(23, 59, 59, 999);
+
+            let completed = 0;
+            let pending = 0;
+            let total = 0;
+
+            // Iterate through each day in the period
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                const stats = getTaskStatsForDay(d.getFullYear(), d.getMonth(), d.getDate());
+                total += stats.total;
+                completed += stats.completed;
+            }
+            
+            pending = total - completed; // Pending is total - completed for the period
+            const rate = total === 0 ? 0 : Math.round((completed / total) * 100);
+            
+            dom.statsCompleted.textContent = completed;
+            dom.statsPending.textContent = pending;
+            dom.statsRate.textContent = `${rate}%`;
+            
+            drawDashboardChart(rate / 100); // Pass as 0-1 value
+        }
+
+        function drawDashboardChart(progress) {
+            const canvas = dom.dashboardChart;
+            const ctx = canvas.getContext('2d');
+            const center = canvas.width / 2;
+            const radius = 50;
+            const lineWidth = 10;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Get colors from CSS variables
+            const style = getComputedStyle(document.body);
+            const bgColor = style.getPropertyValue('--color-border');
+            const fgColor = style.getPropertyValue('--color-primary');
+            const textColor = style.getPropertyValue('--color-text');
+
+            // Background circle
+            ctx.beginPath();
+            ctx.arc(center, center, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = bgColor;
+            ctx.lineWidth = lineWidth;
+            ctx.stroke();
+            
+            // Progress arc
+            ctx.beginPath();
+            ctx.arc(center, center, radius, -0.5 * Math.PI, (2 * Math.PI * progress) - 0.5 * Math.PI);
+            ctx.strokeStyle = fgColor;
+            ctx.lineWidth = lineWidth;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = textColor;
+            ctx.font = '600 20px var(--font-family-base)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`${Math.round(progress * 100)}%`, center, center);
+        }
+
+        // --- Filters ---
+        function handleFilterClick(e) {
+            const button = e.target.closest('.filter-btn');
+            if (!button) return;
+            
+            dom.filterSection.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+            
+            currentFilter = button.dataset.filter;
+            renderTasks();
+        }
+        
+        // --- NEW CALENDAR FUNCTIONS (UPDATED FOR REPEAT) ---
+        function openCalendarModal() { // NEW
+            renderMonthlyCalendar(); // Render with current data when opened
+            dom.calendarModal.classList.add('show');
+        }
+
+        function closeCalendarModal() { // NEW
+            dom.calendarModal.classList.remove('show');
+        }
+
+        function populateDateSelectors() {
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth();
+
+            dom.monthSelect.innerHTML = '';
+            months.forEach((month, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = month;
+                if (index === currentMonth) option.selected = true;
+                dom.monthSelect.appendChild(option);
+            });
+
+            dom.yearSelect.innerHTML = '';
+            for (let i = currentYear - 2; i <= currentYear + 3; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                if (i === currentYear) option.selected = true;
+                dom.yearSelect.appendChild(option);
+            }
+        }
+
+        function renderMonthlyCalendar() {
+            const month = parseInt(dom.monthSelect.value, 10);
+            const year = parseInt(dom.yearSelect.value, 10);
+            
+            dom.monthlyCalendar.innerHTML = ''; // Clear existing calendar
+
+            const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            daysOfWeek.forEach(day => {
+                const headerCell = document.createElement('div');
+                headerCell.className = 'calendar-day header';
+                headerCell.textContent = day;
+                dom.monthlyCalendar.appendChild(headerCell);
+            });
+
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+
+            // Add empty cells for the start of the month
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'calendar-day empty';
+                dom.monthlyCalendar.appendChild(emptyCell);
+            }
+
+            // Add date cells
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateCell = document.createElement('div');
+                dateCell.className = 'calendar-day';
+                dateCell.textContent = day;
+                
+                const stats = getTaskStatsForDay(year, month, day);
+                if (stats.total > 0) {
+                    const achievement = stats.completed / stats.total;
+                    // --- NEW: Use productivityTarget ---
+                    if (achievement >= (productivityTarget / 100)) {
+                        dateCell.classList.add('green');
+                    } else {
+                        dateCell.classList.add('red');
+                    }
+                }
+
+                // Highlight today
+                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    dateCell.classList.add('today');
+                }
+
+                dom.monthlyCalendar.appendChild(dateCell);
+            }
+        }
+
+        function getTaskStatsForDay(year, month, day) {
+            let total = 0;
+            let completed = 0;
+            
+            const targetDate = new Date(year, month, day);
+            const targetDay = targetDate.getDay();
+            const targetDateString = targetDate.toISOString().split('T')[0]; // YYYY-MM-DD
+
+            for (const task of tasks) {
+                let isDueOnThisDay = false;
+                const isRepeating = task.repeatDays && task.repeatDays.length > 0;
+
+                if (isRepeating) {
+                    if (task.repeatDays.includes(targetDay)) {
+                        isDueOnThisDay = true;
+                    }
+                } else if (task.due) {
+                    if (new Date(task.due).toDateString() === targetDate.toDateString()) {
+                        isDueOnThisDay = true;
+                    }
+                }
+
+                if (isDueOnThisDay) {
+                    total++;
+                    if (isRepeating) {
+                        if (task.completedDates && task.completedDates.includes(targetDateString)) {
+                            completed++;
+                        }
+                    } else {
+                        if (task.completed) {
+                            completed++;
+                        }
+                    }
+                }
+            }
+            return { completed, total };
+        }
+        // --- END NEW CALENDAR FUNCTIONS ---
+
+        // --- Reminders & Notifications (UPDATED FOR REPEAT) ---
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        showStatus('Notifications enabled!', 'success');
+                    }
+                });
+            }
+        }
+
+        function scheduleReminder(task) {
+            clearReminder(task.id); // Clear any existing
+            if (!task.due) return;
+
+            const now = new Date();
+            const todayDay = now.getDay();
+            const todayDateString = now.toISOString().split('T')[0];
+            const isRepeating = task.repeatDays && task.repeatDays.length > 0;
+
+            let reminderDateTime = null;
+
+            if (isRepeating) {
+                const isCompletedToday = task.completedDates && task.completedDates.includes(todayDateString);
+                if (task.repeatDays.includes(todayDay) && !isCompletedToday) {
+                    // It's a repeating task for today, not completed
+                    const dueTime = new Date(task.due);
+                    reminderDateTime = new Date();
+                    reminderDateTime.setHours(dueTime.getHours(), dueTime.getMinutes(), 0, 0);
+                    reminderDateTime.setMinutes(reminderDateTime.getMinutes() - task.reminderMinutes);
+                }
+            } else {
+                // One-time task
+                if (!task.completed) {
+                    const dueDate = new Date(task.due);
+                    reminderDateTime = new Date(dueDate.getTime() - (task.reminderMinutes * 60 * 1000));
+                }
+            }
+            
+            if (reminderDateTime && reminderDateTime > now) {
+                const delay = reminderDateTime.getTime() - now.getTime();
+                const timeoutId = setTimeout(() => {
+                    showNotification(task);
+                    speakMessage(`Reminder: It's time to ${task.title}`);
+                }, delay);
+                reminderTimeouts[task.id] = timeoutId;
+            }
+        }
+
+        function clearReminder(taskId) {
+            if (reminderTimeouts[taskId]) {
+                clearTimeout(reminderTimeouts[taskId]);
+                delete reminderTimeouts[taskId];
+            }
+        }
+
+        function loadAllReminders() {
+            tasks.forEach(scheduleReminder);
+        }
+
+        function showNotification(task) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Task Reminder', {
+                    body: task.title,
+                    icon: 'https://placehold.co/192x192/0EA5E9/FFFFFF?text=🔔' // Blue placeholder icon
+                });
+            }
+        }
+
+        // --- Voice & Speech (NEW Conversational Flow) ---
+        
+        function initSpeech() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRecognition) {
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.lang = 'en-IN'; // Changed from en-US for Indian accent
+                recognition.interimResults = false;
+                
+                recognition.onstart = () => {
+                    dom.assistantAvatar.classList.add('listening');
+                    dom.assistantAvatar.title = "Listening... click to stop";
+                };
+                
+                // Handled by handleRecognitionEnd
+                recognition.onend = handleRecognitionEnd;
+                // Handled by handleRecognitionResult
+                recognition.onresult = handleRecognitionResult;
+                
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error', event.error);
+                    showStatus(`Speech error: ${event.error}`, 'error');
+                    conversationState = 'idle';
+                    isListening = false;
+                    dom.assistantAvatar.classList.remove('listening');
+                };
+                
+            } else {
+                showStatus('Speech recognition not supported', 'error');
+                dom.assistantAvatar.disabled = true;
+            }
+        }
+
+        function toggleListening() {
+            if (!isOnline || !recognition) {
+                showStatus('Voice commands are offline', 'error');
+                return;
+            }
+            if (isListening) {
+                recognition.stop(); // This will trigger onend, which resets state
+            } else {
+                startAddTaskFlow();
+            }
+        }
+
+        function getGreeting() {
+            const hour = new Date().getHours();
+            if (hour < 12) return 'good morning';
+            if (hour < 18) return 'good afternoon';
+            return 'good evening';
+        }
+
+        function startAddTaskFlow() {
+            if (isListening) return;
+            
+            isListening = true; // Set global listening flag
+            conversationState = 'prompting_task';
+            newTaskData = {};
+            
+            const greeting = getGreeting();
+            const name = localStorage.getItem('userName') || 'User';
+            
+            speakMessage(`Hi ${name}, ${greeting}. What task can I add for you?`, () => {
+                // This callback runs after speech ends
+                dom.assistantAvatar.classList.add('listening');
+                dom.assistantAvatar.title = "Listening... click to stop";
+                recognition.start();
+                conversationState = 'listening_task';
+            });
+        }
+
+        function handleRecognitionResult(event) {
+            const transcript = event.results[0][0].transcript.trim();
+            if (transcript === "") return; // Ignore empty results
+            
+            dom.assistantAvatar.classList.remove('listening'); // Stop listening pulse
+            
+            switch (conversationState) {
+                case 'listening_task':
+                    newTaskData = { title: transcript };
+                    conversationState = 'prompting_date';
+                    speakMessage("Got it. On which day do you want to add or schedule this task? Please say the full date, like 'November 7th 2025'.", () => {
+                        recognition.start();
+                        conversationState = 'listening_date';
+                    });
+                    break;
+                case 'listening_date':
+                    newTaskData.dateString = transcript;
+                    conversationState = 'prompting_time';
+                    speakMessage("And at what time? Please be specific, including AM or PM.", () => {
+                        recognition.start();
+                        conversationState = 'listening_time';
+                    });
+                    break;
+                case 'listening_time':
+                    newTaskData.timeString = transcript;
+                    conversationState = 'prompting_reminder';
+                    speakMessage("How many minutes before the due time do you want a reminder? For example, say '5 minutes' or 'at due time'.", () => {
+                        recognition.start();
+                        conversationState = 'listening_reminder';
+                    });
+                    break;
+                case 'listening_reminder':
+                    newTaskData.reminderString = transcript;
+                    conversationState = 'saving';
+                    // NOTE: Voice does not support repeating tasks yet. This flow only creates one-time tasks.
+                    processNewTaskData();
+                    break;
+            }
+        }
+        
+        function handleRecognitionEnd() {
+            // This logic handles timeouts or manual stops
+            if (conversationState === 'idle' || conversationState === 'saving') {
+                isListening = false;
+                dom.assistantAvatar.classList.remove('listening');
+                dom.assistantAvatar.title = "Click for voice input";
+            } else if (conversationState === 'listening_task' || conversationState === 'listening_date' || conversationState === 'listening_time' || conversationState === 'listening_reminder') {
+                // Mic timed out without a result, or user clicked stop
+                speakMessage("Sorry, I didn't catch that. Let's start over.");
+                isListening = false;
+                conversationState = 'idle';
+                dom.assistantAvatar.classList.remove('listening');
+                dom.assistantAvatar.title = "Click for voice input";
+            }
+        }
+        
+        function parseReminderString(text) {
+            text = text.toLowerCase();
+            let minutes = 5; // default
+
+            if (text.includes("at due time")) {
+                minutes = 0;
+            } else if (text.includes("minute")) {
+                minutes = parseInt(text.replace(/[^0-9]/g, '')) || 5;
+            } else if (text.includes("hour")) {
+                const hours = parseInt(text.replace(/[^0-9]/g, '')) || 1;
+                minutes = hours * 60;
+            } else if (text.includes("day")) {
+                const days = parseInt(text.replace(/[^0-9]/g, '')) || 1;
+                minutes = days * 1440;
+            }
+            
+            // Check if the parsed value is one of the valid options
+            const validOptions = ["0", "5", "10", "15", "30", "60", "120", "1440"];
+            if (validOptions.includes(String(minutes))) {
+                return minutes;
+            }
+            // Default to 5 minutes if parse is weird or not a standard option
+            return 5; 
+        }
+
+        function processNewTaskData() {
+            const { title, dateString, timeString, reminderString } = newTaskData;
+            
+            // Try to parse the combined date/time string
+            const fullDateString = `${dateString} ${timeString}`; // e.g., "November 7th 2025 5 PM"
+            const parsedDate = new Date(fullDateString);
+            
+            if (isNaN(parsedDate.getTime())) {
+                speakMessage(`Sorry, I couldn't understand the date "${fullDateString}". Let's try again from the beginning.`);
+                conversationState = 'idle';
+                isListening = false;
+                return;
+            }
+            
+            // Format for the <input type="datetime-local">
+            // This handles local time zone offset
+            const localDate = new Date(parsedDate.getTime() - (parsedDate.getTimezoneOffset() * 60000));
+            const isoString = localDate.toISOString().slice(0, 16);
+            
+            const reminderMinutes = parseReminderString(reminderString || '5 minutes');
+            
+            dom.taskInput.value = title;
+            dom.dueDateInput.value = isoString;
+            dom.reminderTimeSelect.value = String(reminderMinutes);
+            // This voice-added task will be a one-time task
+            dom.repeatCheckbox.checked = false; 
+            dom.dayToggles.forEach(b => b.classList.remove('active'));
+            dom.repeatDaysContainer.style.display = 'none';
+
+            handleAddTask(); // This saves, re-renders, and schedules reminders
+            
+            const formattedDate = parsedDate.toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' });
+            const formattedTime = parsedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            const reminderText = reminderMinutes == 0 ? "at the due time" : `${reminderMinutes} minutes before`;
+            const confirmation = `Your task, ${title}, is listed on ${formattedDate} at ${formattedTime}. I will remind you ${reminderText}. Have a great day!`;
+            
+            speakMessage(confirmation, () => {
+                conversationState = 'idle';
+                isListening = false;
+            });
+            
+            newTaskData = {};
+        }
+
+        function loadVoices() {
+            const setVoice = () => {
+                const voices = speechSynthesis.getVoices();
+                if (voices.length === 0) return;
+                
+                // --- MODIFIED VOICE SEARCH ---
+                // 1. Prefer Google Indian English Female voice
+                assistantVoice = voices.find(v => 
+                    v.lang === 'en-IN' && 
+                    v.name.includes('Google') && 
+                    v.name.toLowerCase().includes('female')
+                );
+                
+                // 2. Fallback to any Indian English Female voice
+                if (!assistantVoice) {
+                    assistantVoice = voices.find(v => 
+                        v.lang === 'en-IN' && 
+                        v.name.toLowerCase().includes('female')
+                    );
+                }
+
+                // 3. Fallback to any Google Indian English voice
+                if (!assistantVoice) {
+                    assistantVoice = voices.find(v => 
+                        v.lang === 'en-IN' && 
+                        v.name.includes('Google')
+                    );
+                }
+
+                // 4. Fallback to any Indian English voice
+                if (!assistantVoice) {
+                    assistantVoice = voices.find(v => v.lang === 'en-IN');
+                }
+
+                // 5. Fallback to any Google English Female voice
+                if (!assistantVoice) {
+                    assistantVoice = voices.find(v => 
+                        v.lang.startsWith('en-') && 
+                        v.name.includes('Google') &&
+                        v.name.toLowerCase().includes('female')
+                    );
+                }
+
+                // 6. Fallback to any English Female voice
+                if (!assistantVoice) {
+                    assistantVoice = voices.find(v => 
+                        v.lang.startsWith('en-') &&
+                        v.name.toLowerCase().includes('female')
+                    );
+                }
+                
+                // 7. Fallback to the first available English voice
+                if (!assistantVoice) {
+                    assistantVoice = voices.find(v => v.lang.startsWith('en-'));
+                }
+
+                // 8. Fallback to the first available voice
+                if (!assistantVoice) {
+                    assistantVoice = voices[0];
+                }
+                // --- END MODIFIED VOICE SEARCH ---
+            };
+            
+            setVoice();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = setVoice;
+            }
+        }
+
+        function speakMessage(text, onEndCallback = null) {
+            if (!isOnline) return;
+            speechSynthesis.cancel(); // Stop any previous speech
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            if (assistantVoice) {
+                utterance.voice = assistantVoice;
+            }
+            utterance.onstart = () => dom.assistantAvatar.classList.add('speaking');
+            utterance.onend = () => {
+                dom.assistantAvatar.classList.remove('speaking');
+                if (onEndCallback) {
+                    onEndCallback();
+                }
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        // --- Offline & Status ---
+        function updateOnlineStatus() {
+            isOnline = navigator.onLine;
+            if (isOnline) {
+                dom.offlineIndicator.classList.remove('show');
+                dom.assistantAvatar.disabled = false;
+                dom.assistantAvatar.title = "Click for voice input";
+            } else {
+                dom.offlineIndicator.classList.add('show');
+                dom.assistantAvatar.disabled = true;
+                dom.assistantAvatar.title = "Voice input disabled offline";
+                if (isListening) recognition.stop();
+            }
+        }
+
+        function showStatus(message, type = 'success') {
+            dom.statusMessage.textContent = message;
+            dom.statusMessage.className = `status-message ${type} show`;
+            
+            setTimeout(() => {
+                dom.statusMessage.classList.remove('show');
+            }, 3000);
+        }
+        
+    </script>
+</body>
+</html>
